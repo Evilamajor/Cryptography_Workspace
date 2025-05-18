@@ -1,15 +1,24 @@
 #!/bin/bash
 
-# Navigate to the workspace (adjust if needed)
+# Navigate to workspace
 cd "$(dirname "$0")"
 
-# Add all changes
+# Activate the virtual environment
+source cryptography_env/bin/activate
+
+# Add, commit, and push changes
 git add .
-
-# Commit with a descriptive message (date/time stamp)
-git commit -m "Auto-update: $(date +'%Y-%m-%d %H:%M:%S')"
-
-# Push to GitHub
+COMMIT_MESSAGE="Auto-update: $(date +'%Y-%m-%d %H:%M:%S')"
+git commit -m "$COMMIT_MESSAGE"
 git push origin main
 
+# Run ChatGPT script
+CHATGPT_COMMENT=$(python3 chatgpt_operator.py "$COMMIT_MESSAGE")
+
+# Log ChatGPT comment
+echo "$(date +'%Y-%m-%d %H:%M:%S') - $CHATGPT_COMMENT" >> chatgpt_commit_comments.log
+echo "ChatGPT Comment: $CHATGPT_COMMENT"
+
+# Deactivate environment after running
+deactivate
 
