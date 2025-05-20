@@ -1,25 +1,26 @@
-def caesar_encrypt(plain_text, shift):
+def encrypt_caesar(text, shift=3):
     encrypted_text = ""
-    for char in plain_text:
+    for char in text:
         if char.isalpha():
-            base = ord('A') if char.isupper() else ord('a')
-            encrypted_text += chr((ord(char) - base + shift) % 26 + base)
+            shift_amount = shift % 26
+            new_char = chr(((ord(char.lower()) - 97 + shift_amount) % 26) + 97)
+            encrypted_text += new_char.upper() if char.isupper() else new_char
         else:
             encrypted_text += char
     return encrypted_text
 
-def caesar_decrypt(encrypted_text, shift):
-    return caesar_encrypt(encrypted_text, -shift)
+def decrypt_caesar(text, shift=3):
+    return encrypt_caesar(text, -shift)
 
-# Test ràpid
+# Opcional (test ràpid)
 if __name__ == "__main__":
-    test_text = "Hello, Eduard!"
-    shift = 3
-    encrypted = caesar_encrypt(test_text, shift)
-    decrypted = caesar_decrypt(encrypted, shift)
-
-    print(f"Original: {test_text}")
+    original = "Hello, Eduard!"
+    encrypted = encrypt_caesar(original, shift=3)
+    decrypted = decrypt_caesar(encrypted, shift=3)
+    
+    print(f"Original: {original}")
     print(f"Encrypted: {encrypted}")
     print(f"Decrypted: {decrypted}")
+
 
 

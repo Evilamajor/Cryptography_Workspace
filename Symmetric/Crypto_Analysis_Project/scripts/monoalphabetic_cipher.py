@@ -1,45 +1,46 @@
 import random
 import string
 
-# Generar una clau monoalfabètica aleatòria
 def generate_monoalphabetic_key():
     alphabet = list(string.ascii_lowercase)
     shuffled_alphabet = alphabet[:]
     random.shuffle(shuffled_alphabet)
     return dict(zip(alphabet, shuffled_alphabet))
 
-# Xifratge monoalfabètic
-def monoalphabetic_encrypt(plain_text, key):
-    encrypted_text = ""
-    for char in plain_text.lower():
-        if char in key:
-            encrypted_text += key[char]
+def encrypt_monoalphabetic(text, key=None):
+    if key is None:
+        key = generate_monoalphabetic_key()
+    
+    encrypted = ""
+    for char in text:
+        if char.lower() in key:
+            encrypted_char = key[char.lower()]
+            encrypted += encrypted_char.upper() if char.isupper() else encrypted_char
         else:
-            encrypted_text += char
-    return encrypted_text
+            encrypted += char
+            
+    return encrypted, key
 
-# Desxifratge monoalfabètic
-def monoalphabetic_decrypt(encrypted_text, key):
-    reverse_key = {v: k for k, v in key.items()}
-    decrypted_text = ""
-    for char in encrypted_text:
-        if char in reverse_key:
-            decrypted_text += reverse_key[char]
+def decrypt_monoalphabetic(text, key):
+    inverse_key = {v: k for k, v in key.items()}
+    decrypted = ""
+    for char in text:
+        if char.lower() in inverse_key:
+            decrypted_char = inverse_key[char.lower()]
+            decrypted += decrypted_char.upper() if char.isupper() else decrypted_char
         else:
-            decrypted_text += char
-    return decrypted_text
+            decrypted += char
+            
+    return decrypted
 
-# Test ràpid
+# Opcional (test ràpid)
 if __name__ == "__main__":
-    text = "hello eduard"
-    key = generate_monoalphabetic_key()
-
-    encrypted = monoalphabetic_encrypt(text, key)
-    decrypted = monoalphabetic_decrypt(encrypted, key)
-
-    print(f"Original: {text}")
+    original = "hello eduard"
+    encrypted, used_key = encrypt_monoalphabetic(original)
+    decrypted = decrypt_monoalphabetic(encrypted, used_key)
+    
+    print(f"Original: {original}")
     print(f"Encrypted: {encrypted}")
     print(f"Decrypted: {decrypted}")
-    print(f"Key used: {key}")
-
+    print(f"Key used: {used_key}")
 
